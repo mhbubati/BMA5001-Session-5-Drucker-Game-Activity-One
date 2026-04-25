@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="The Drucker Game - Peter Drucker's Sources of Innovation Quiz - Bath Spa University London"/>
+<title>🧠 The Drucker Game – In‑Class Edition | Bath Spa University London</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== GLOBAL STYLES - HIGH CONTRAST & ACCESSIBLE ===== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+:root{
+  --bg:#0f172a;
+  --card-bg:#1e293b;
+  --text:#f8fafc;
+  --primary:#38bdf8;
+  --primary-dark:#0ea5e9;
+  --success:#22c55e;
+  --error:#dc2626;
+  --warning:#fbbf24;
+  --border:#334155;
+  --glow:0 0 20px rgba(56,189,248,0.4);
+  --shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+
+body{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+  min-height:100vh;
+  position:relative;
+  padding:0;
+}
+
+/* ✅ CRITICAL FIX: Ensure hidden elements stay hidden */
+.hidden{display:none!important}
+
+/* ===== ANIMATED BACKGROUND - SPARKS & PARTICLES ===== */
+.bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
+.bg-animation .spark{position:absolute;width:4px;height:4px;background:rgba(56,189,248,0.6);border-radius:50%;animation:sparkle 4s infinite ease-in-out}
+.bg-animation .spark:nth-child(1){top:10%;left:10%;animation-delay:0s}
+.bg-animation .spark:nth-child(2){top:20%;left:80%;animation-delay:1.5s}
+.bg-animation .spark:nth-child(3){top:50%;left:30%;animation-delay:3s}
+.bg-animation .spark:nth-child(4){top:70%;left:70%;animation-delay:2s}
+.bg-animation .spark:nth-child(5){top:85%;left:20%;animation-delay:4s}
+@keyframes sparkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1);opacity:1}}
+
+/* Particle Canvas */
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+#confetti-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:1000}
+
+.skip-link{position:absolute;top:-40px;left:0;background:var(--primary);color:#fff;padding:10px 20px;z-index:100;transition:top .3s;font-weight:700;border:2px solid #fff}
+.skip-link:focus{top:0;outline:3px solid var(--warning);outline-offset:2px}
+
+/* ===== MAIN CONTAINER ===== */
+.container{max-width:1100px;margin:0 auto;padding:40px 25px;position:relative;z-index:1}
+
+/* ===== HEADER CARD ===== */
+.header-card{
+  background:rgba(30,41,59,0.98);
+  backdrop-filter:blur(20px);
+  border-radius:25px;
+  padding:35px;
+  box-shadow:var(--shadow);
+  margin-bottom:30px;
+  border:2px solid rgba(56,189,248,0.3);
+  animation:slideIn 0.8s ease-out;
+  text-align:center;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.header-card h1{
+  font-size:2.8rem;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--primary) 0%,#7dd3fc 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:10px;
+  text-shadow:var(--glow);
+}
+.university-name{
+  font-size:1.2rem;
+  color:#94a3b8;
+  font-weight:600;
+  margin-top:10px;
+  padding-top:15px;
+  border-top:2px solid var(--border);
+}
+
+/* ===== INTRO BOX ===== */
+.intro-box{
+  background:linear-gradient(135deg,#1e293b 0%,#334155 100%);
+  padding:30px;
+  border-left:6px solid var(--primary);
+  margin-bottom:30px;
+  border-radius:15px;
+  box-shadow:0 4px 15px rgba(56,189,248,0.15);
+  font-size:1.35rem;
+  line-height:1.9;
+}
+.intro-box strong{color:var(--primary);font-weight:800}
+.intro-features{display:flex;gap:15px;flex-wrap:wrap;margin-top:20px}
+.intro-feature{background:#0f172a;padding:10px 18px;border-radius:25px;font-weight:700;font-size:1.1rem;box-shadow:0 3px 10px rgba(0,0,0,0.3);border:1px solid var(--border)}
+
+/* ===== GAME CARD - GLASSMORPHISM ===== */
+.game-card{
+  background:rgba(30,41,59,0.98);
+  backdrop-filter:blur(20px);
+  border-radius:25px;
+  padding:40px;
+  margin-bottom:30px;
+  box-shadow:var(--shadow);
+  border:2px solid rgba(56,189,248,0.3);
+  animation:cardEnter 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes cardEnter{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.game-card h2{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--primary);
+  margin-bottom:20px;
+  text-align:center;
+}
+.game-card p{
+  font-size:1.35rem;
+  line-height:1.9;
+  color:var(--text);
+  margin-bottom:25px;
+  text-align:center;
+}
+.game-card strong{color:var(--primary);font-weight:800}
+
+/* ===== DASHBOARD ===== */
+.dashboard{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  padding:15px 20px;
+  background:rgba(30,41,59,0.8);
+  border-radius:15px;
+  border:2px solid var(--border);
+  font-size:1.2rem;
+  font-weight:700;
+}
+#roundInfo{color:var(--primary)}
+#scoreInfo{color:var(--success)}
+
+/* ===== PROGRESS BAR ===== */
+.progress-container{background:rgba(30,41,59,0.8);backdrop-filter:blur(10px);padding:20px;margin:30px 0;border-radius:15px;border:2px solid var(--border);box-shadow:var(--glow)}
+.progress-label{font-size:1.2rem;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}
+.progress{width:100%;height:25px;background:#334155;border-radius:15px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,0.5)}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--primary) 0%,#7dd3fc 100%);border-radius:15px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 15px var(--primary)}
+
+/* ===== OPTION BUTTONS ===== */
+.option-btn{
+  display:block;
+  width:100%;
+  padding:20px 25px;
+  margin:15px 0;
+  font-size:1.25rem;
+  font-weight:700;
+  border-radius:15px;
+  border:3px solid var(--border);
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  color:var(--text);
+  cursor:pointer;
+  transition:all .3s ease;
+  text-align:left;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+}
+.option-btn:hover{
+  transform:translateX(10px);
+  border-color:var(--primary);
+  background:linear-gradient(135deg,#334155 0%,#475569 100%);
+  box-shadow:0 6px 20px rgba(56,189,248,0.3);
+}
+.option-btn:active{transform:translateX(5px)}
+.option-btn:focus-visible{outline:3px solid var(--warning);outline-offset:3px}
+.option-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.option-btn.selected{
+  background:linear-gradient(135deg,var(--primary) 0%,#7dd3fc 100%)!important;
+  border-color:var(--primary)!important;
+  color:#0f172a!important;
+  animation:buttonPop 0.4s ease;
+}
+@keyframes buttonPop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+
+/* ===== FEEDBACK BOX ===== */
+.feedback{
+  margin-top:25px;
+  padding:25px;
+  border-radius:15px;
+  font-size:1.25rem;
+  font-weight:700;
+  animation:fadeIn 0.4s ease;
+  display:none;
+  border-left:6px solid var(--primary);
+  background:rgba(30,41,59,0.8);
+}
+.feedback.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== NAVIGATION BUTTONS ===== */
+.next-btn{
+  background:linear-gradient(135deg,var(--primary) 0%,#7dd3fc 100%);
+  color:#fff;border:none;padding:18px 40px;font-size:1.25rem;font-weight:800;
+  border-radius:30px;cursor:pointer;transition:all .3s ease;
+  box-shadow:0 6px 20px rgba(56,189,248,0.4);
+  width:100%;
+  margin-top:20px;
+}
+.next-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(56,189,248,0.6)}
+.next-btn:active{transform:translateY(-1px)}
+.next-btn:focus-visible{outline:3px solid var(--warning);outline-offset:3px}
+.next-btn:disabled{background:#334155;cursor:not-allowed;transform:none;box-shadow:none;opacity:0.5}
+
+/* ===== END SCREEN ===== */
+#end{text-align:center}
+.badge{font-size:5rem;margin-bottom:20px;display:block;animation:badgeBounce 1s infinite}
+@keyframes badgeBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* ===== ACHIEVEMENT BADGES - ONLY ON END SCREEN ===== */
+.achievement-badges{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:30px 0}
+.achievement-badge{
+  background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%);
+  color:#0f172a;
+  padding:20px 30px;
+  border-radius:25px;
+  font-weight:800;
+  font-size:1.2rem;
+  box-shadow:0 4px 15px rgba(245,158,11,0.4);
+  border:2px solid #f59e0b;
+  animation:badgePop 0.5s ease-out;
+  animation-fill-mode:both;
+}
+.achievement-badge:nth-child(1){animation-delay:0.1s}
+.achievement-badge:nth-child(2){animation-delay:0.2s}
+.achievement-badge:nth-child(3){animation-delay:0.3s}
+@keyframes badgePop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* ===== KEY TAKEAWAY BOX ===== */
+.key-takeaway{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border:3px solid var(--warning);
+  border-radius:15px;
+  padding:25px;
+  margin:30px 0;
+  text-align:left;
+}
+.key-takeaway h3{
+  color:var(--warning);
+  font-size:1.5rem;
+  font-weight:800;
+  margin-bottom:15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.key-takeaway p{
+  font-size:1.2rem;
+  line-height:1.8;
+  margin-bottom:15px;
+  color:var(--text);
+}
+
+/* ===== CONFETTI CANVAS ===== */
+#confetti-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:1000}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .container{padding:25px 15px}
+  .header-card h1{font-size:2.2rem}
+  .university-name{font-size:1rem}
+  .intro-box{font-size:1.2rem;padding:20px}
+  .game-card{padding:25px}
+  .game-card h2{font-size:1.6rem}
+  .game-card p{font-size:1.2rem}
+  .option-btn{font-size:1.15rem;padding:16px 20px}
+  .next-btn{padding:16px 30px;font-size:1.15rem}
+  .badge{font-size:4rem}
+  .achievement-badges{flex-direction:column}
+  .key-takeaway{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+  <a href="#game-area" class="skip-link">⬇️ Skip to game</a>
+  
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="spark"></div><div class="spark"></div><div class="spark"></div><div class="spark"></div><div class="spark"></div>
+  </div>
+  <canvas id="particle-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+  
+  <div class="container">
+    <!-- Header Card -->
+    <div class="header-card">
+      <h1>🧠 The Drucker Game</h1>
+      <p style="font-size:1.35rem;color:#94a3b8;font-weight:600;margin-top:10px">In‑Class Edition: Peter Drucker's Sources of Innovation</p>
+      <div class="university-name">🏫 Bath Spa University - London - Hackney Campus</div>
+    </div>
+    
+    <!-- Intro Screen -->
+    <div id="intro" class="intro-box">
+      <p><strong>🎯 Your Mission:</strong> You practise identifying <strong>where innovation opportunities come from</strong> using Peter Drucker's Sources of Innovation.</p>
+      
+      <div class="intro-features">
+        <span class="intro-feature">✅ 5 real‑world scenarios</span>
+        <span class="intro-feature">✅ Individual points (no zero scores)</span>
+        <span class="intro-feature">✅ Learning > perfection</span>
+      </div>
+      
+      <p style="margin-top:25px">You will make <strong>one decision per scenario</strong>. Once chosen, your answer is locked in — just like in real organisations.</p>
+      
+      <button class="next-btn" onclick="start()" style="margin-top:30px">🚀 Start the Game</button>
+    </div>
+    
+    <!-- Progress Bar (hidden initially) -->
+    <div class="progress-container hidden" id="progress-container">
+      <div class="progress-label">
+        <span>Game Progress</span>
+        <span id="progress-text">Scenario 1 / 5</span>
+      </div>
+      <div class="progress"><div class="progress-fill" id="progressBar"></div></div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game" class="game-card hidden">
+      <div class="dashboard">
+        <span id="roundInfo"></span>
+        <span id="scoreInfo">Score: 0</span>
+      </div>
+      
+      <h2 id="roundTitle"></h2>
+      <p id="scenario"></p>
+      
+      <div id="options"></div>
+      
+      <div id="feedback" class="feedback"></div>
+      <button id="nextBtn" class="next-btn hidden" onclick="next()">Next ➡️</button>
+    </div>
+    
+    <!-- End Screen - ✅ NOW PROPERLY HIDDEN INITIALLY -->
+    <div id="end" class="game-card hidden">
+      <span class="badge">🏅</span>
+      <h1>Drucker Detective Unlocked!</h1>
+      
+      <p style="font-size:1.45rem;margin:20px 0">
+        🎓 <strong>Your final score:</strong><br>
+        <span id="finalScore" style="font-size:3rem;color:var(--success);font-weight:900;display:block;margin:15px 0"></span> points
+      </p>
+      
+      <!-- ✅ BADGES ONLY APPEAR HERE, ON END SCREEN -->
+      <div class="achievement-badges">
+        <div class="achievement-badge">🧠 Innovation Thinker</div>
+        <div class="achievement-badge">🔍 Drucker Detective</div>
+        <div class="achievement-badge">☕ Coffee Earned</div>
+      </div>
+      
+      <div class="key-takeaway">
+        <h3>🌟 Key Insight</h3>
+        <p><strong>Innovation opportunities are rarely random — they can be recognised, analysed, and justified.</strong></p>
+        <p>By applying Drucker's systematic framework, you've learned to identify patterns in how innovations emerge — a critical skill for strategic thinking and business analysis.</p>
+      </div>
+      
+      <p style="font-size:1.35rem;margin-top:25px">
+        Take this thinking into your group work and assessment discussions. 🚀
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ===== UTILITY: SHUFFLE OPTIONS =====
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // ===== GAME DATA =====
+    let score = 0;
+    let current = 0;
+    let audioCtx = null;
+
+    const rounds = [
+      {
+        title: "Round 1 – Guided",
+        scenario: "Dyson noticed customers were frustrated because vacuum cleaners lost suction over time.",
+        options: [
+          { text: "Customer demand", points: 3, feedback: "Strong fit. Customer frustration clearly triggered this innovation." },
+          { text: "Process need", points: 2, feedback: "Reasonable, but the main source was customer experience." },
+          { text: "Demographic change", points: 1, feedback: "Less convincing — population change was not central." }
+        ]
+      },
+      {
+        title: "Round 2 – Guided",
+        scenario: "Toyota introduced Lean Manufacturing to reduce waste and errors on the factory floor.",
+        options: [
+          { text: "Process need", points: 3, feedback: "Excellent judgement — this innovation improved how work was done." },
+          { text: "Industry change", points: 2, feedback: "Partly relevant, but internal inefficiency was the key trigger." },
+          { text: "Change in perception", points: 1, feedback: "Less relevant — perception did not drive this change." }
+        ]
+      },
+      {
+        title: "Round 3 – Semi‑Guided",
+        scenario: "Netflix moved from DVDs to streaming as broadband access increased and viewing habits changed.",
+        options: [
+          { text: "Industry and market change", points: 3, feedback: "Strong judgement — the market structure shifted." },
+          { text: "New knowledge", points: 2, feedback: "Also relevant, but market change was more decisive." },
+          { text: "Unexpected success", points: 1, feedback: "Less convincing — this was a strategic move." }
+        ]
+      },
+      {
+        title: "Round 4 – Semi‑Guided",
+        scenario: "Airbnb grew by offering cheaper, more personal accommodation than traditional hotels.",
+        options: [
+          { text: "Incongruity", points: 3, feedback: "Excellent. This reflects a clear market gap." },
+          { text: "Customer demand", points: 2, feedback: "Reasonable, though incongruity explains it more precisely." },
+          { text: "Process need", points: 1, feedback: "Less fitting — process was not the main driver." }
+        ]
+      },
+      {
+        title: "Round 5 – Challenge",
+        scenario: "Wellbeing apps expanded rapidly as mental health became widely viewed as a priority.",
+        options: [
+          { text: "Change in perception", points: 3, feedback: "Strong answer — shifting values drove demand." },
+          { text: "Demographic change", points: 2, feedback: "Partly relevant, but perception played the larger role." },
+          { text: "New knowledge", points: 1, feedback: "Less convincing — no major knowledge breakthrough." }
+        ]
+      }
+    ];
+
+    // ===== AUDIO SYSTEM =====
+    function initAudio() {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch(e) { console.debug('Web Audio not supported'); }
+    }
+    function playSound(type) {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const oscillator = audioCtx.createOscillator(), gainNode = audioCtx.createGain();
+      oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+      
+      if (type === 'correct') {
+        [523.25, 659.25, 783.99].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i*0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i*0.08 + 0.2);
+          osc.start(audioCtx.currentTime + i*0.08); osc.stop(audioCtx.currentTime + i*0.08 + 0.2);
+        });
+      } else if (type === 'wrong') {
+        oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime + 0.15);
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + 0.3);
+      } else if (type === 'win') {
+        [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.25, audioCtx.currentTime + i*0.12);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i*0.12 + 0.4);
+          osc.start(audioCtx.currentTime + i*0.12); osc.stop(audioCtx.currentTime + i*0.12 + 0.4);
+        });
+      } else if (type === 'click') {
+        oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + 0.1);
+      }
+    }
+
+    // ===== PARTICLES =====
+    function initParticles() {
+      const canvas = document.getElementById('particle-canvas'); if (!canvas) return;
+      const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      const particles = [], particleCount = 50;
+      class Particle {
+        constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 0.5 - 0.25; this.speedY = Math.random() * 0.5 - 0.25; this.color = `rgba(56, 189, 248, ${Math.random() * 0.3 + 0.1})`; }
+        update() { this.x += this.speedX; this.y += this.speedY; if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width; if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height; }
+        draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+      }
+      function init() { for (let i = 0; i < particleCount; i++) particles.push(new Particle()); }
+      function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+      init(); animate();
+      window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    }
+
+    // ===== CONFETTI =====
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiActive = false, confettiPieces = [], animationFrameId = null;
+    function createConfettiPiece() {
+      const colors = ["#38bdf8", "#7dd3fc", "#22c55e", "#fbbf24", "#f472b6", "#a855f7"];
+      const shapes = ['rect', 'circle', 'triangle', 'star', 'diamond'];
+      return { x: Math.random() * confettiCanvas.width, y: Math.random() * -50 - 20, size: Math.random() * 10 + 5, angle: Math.random() * Math.PI * 2, speed: Math.random() * 3 + 2, rotation: (Math.random() - 0.5) * 0.1, color: colors[Math.floor(Math.random() * colors.length)], shape: shapes[Math.floor(Math.random() * shapes.length)], opacity: Math.random() * 0.4 + 0.6, wind: (Math.random() - 0.5) * 1, wobble: Math.random() * Math.PI * 2 };
+    }
+    function drawConfetti() {
+      if (!confettiActive || !ctx) return;
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.1)'; ctx.fillRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiPieces = confettiPieces.filter(piece => {
+        piece.y += piece.speed; piece.x += piece.wind + Math.sin(piece.wobble) * 2; piece.angle += piece.rotation; piece.wobble += 0.05;
+        if (piece.y > confettiCanvas.height + 50) return false;
+        ctx.save(); ctx.translate(piece.x, piece.y); ctx.rotate(piece.angle); ctx.globalAlpha = piece.opacity; ctx.fillStyle = piece.color;
+        if (piece.shape === 'rect') ctx.fillRect(-piece.size/2, -piece.size/2, piece.size, piece.size * 1.5);
+        else if (piece.shape === 'circle') { ctx.beginPath(); ctx.arc(0, 0, piece.size/2, 0, Math.PI * 2); ctx.fill(); }
+        else if (piece.shape === 'triangle') { ctx.beginPath(); ctx.moveTo(0, -piece.size/2); ctx.lineTo(-piece.size/2, piece.size/2); ctx.lineTo(piece.size/2, piece.size/2); ctx.closePath(); ctx.fill(); }
+        else if (piece.shape === 'star') { for (let i = 0; i < 5; i++) { ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * piece.size/2, -Math.sin((18 + i * 72) * Math.PI / 180) * piece.size/2); ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * piece.size/4, -Math.sin((54 + i * 72) * Math.PI / 180) * piece.size/4); } ctx.closePath(); ctx.fill(); }
+        else if (piece.shape === 'diamond') { ctx.beginPath(); ctx.moveTo(0, -piece.size/2); ctx.lineTo(piece.size/2, 0); ctx.lineTo(0, piece.size/2); ctx.lineTo(-piece.size/2, 0); ctx.closePath(); ctx.fill(); }
+        ctx.restore(); return true;
+      });
+      if (confettiPieces.length < 200 && Math.random() > 0.7) confettiPieces.push(createConfettiPiece());
+      animationFrameId = requestAnimationFrame(drawConfetti);
+    }
+    function startConfetti(duration = 5000) { if (confettiActive) return; confettiActive = true; confettiPieces = []; for (let i = 0; i < 150; i++) confettiPieces.push(createConfettiPiece()); drawConfetti(); if (duration > 0) setTimeout(stopConfetti, duration); }
+    function stopConfetti() { confettiActive = false; if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; } if (ctx && confettiCanvas) ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); confettiPieces = []; }
+
+    // ===== START GAME =====
+    function start() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('progress-container').classList.remove('hidden');
+      document.getElementById('game').classList.remove('hidden');
+      load();
+    }
+
+    // ===== LOAD ROUND =====
+    function load() {
+      const r = rounds[current];
+      document.getElementById('roundTitle').innerText = r.title;
+      document.getElementById('scenario').innerText = r.scenario;
+      document.getElementById('roundInfo').innerText = `Scenario ${current + 1} of ${rounds.length}`;
+      document.getElementById('scoreInfo').innerText = `Score: ${score}`;
+      
+      // Update progress bar
+      const percent = ((current + 1) / rounds.length) * 100;
+      document.getElementById('progressBar').style.width = percent + '%';
+      document.getElementById('progress-text').innerText = `Scenario ${current + 1} / ${rounds.length}`;
+      
+      const opts = document.getElementById('options');
+      opts.innerHTML = '';
+      
+      const shuffledOptions = shuffle([...r.options]);
+      shuffledOptions.forEach(o => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = o.text;
+        btn.onclick = () => choose(o);
+        opts.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').classList.remove('show');
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('nextBtn').classList.add('hidden');
+    }
+
+    // ===== CHOOSE OPTION =====
+    function choose(o) {
+      // Lock all options after first selection
+      document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+      
+      // Highlight selected button
+      event.target.classList.add('selected');
+      
+      score += o.points;
+      document.getElementById('scoreInfo').innerText = `Score: ${score}`;
+      
+      const fb = document.getElementById('feedback');
+      fb.innerHTML = `✅ +${o.points} points<br><br>${o.feedback}`;
+      fb.classList.add('show');
+      
+      document.getElementById('nextBtn').classList.remove('hidden');
+      
+      // Play sound based on points
+      if (o.points >= 3) playSound('correct');
+      else if (o.points >= 2) playSound('click');
+      else playSound('wrong');
+    }
+
+    // ===== NEXT ROUND =====
+    function next() {
+      playSound('click');
+      current++;
+      if (current < rounds.length) {
+        load();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    // ===== SHOW END SCREEN =====
+    function showEndScreen() {
+      document.getElementById('game').classList.add('hidden');
+      document.getElementById('progress-container').classList.add('hidden');
+      document.getElementById('end').classList.remove('hidden'); // ✅ NOW PROPERLY SHOWS END SCREEN
+      document.getElementById('finalScore').innerText = score;
+      document.getElementById('end').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
+      playSound('win');
+      startConfetti();
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      initAudio();
+      initParticles();
+      
+      window.addEventListener('resize', () => {
+        if (confettiCanvas.classList.contains('active')) {
+          confettiCanvas.width = window.innerWidth;
+          confettiCanvas.height = window.innerHeight;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
